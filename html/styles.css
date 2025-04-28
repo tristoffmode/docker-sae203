@@ -1,35 +1,121 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9;
-    text-align: center;
+    background-color: #f5f5f5; /* Gris très clair */
+    margin: 0;
     padding: 20px;
+    text-align: center;
 }
 
 h1 {
-    color: #222;
-    margin-bottom: 40px;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+    font-size: 36px;
+}
+
+h2 {
+    color: #4a4a4a;
+    margin-top: 30px;
+    font-size: 28px;
+}
+
+.description {
+    margin: 30px auto;
+    max-width: 800px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    font-size: 20px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.example-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.button {
+    display: inline-block;
+    margin: 10px;
+    padding: 15px 30px;
+    background-color: #9e9e9e; /* Gris */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #616161; /* Gris plus foncé pour l'effet hover */
 }
 
 .youtuber-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+    justify-items: center; /* Centre les éléments horizontalement */
+    align-items: center;   /* Centre les éléments verticalement */
+}	
 
 .youtuber-card {
-    display: inline-block;
-    background-color: #ff0000;
-    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border: 4px solid #bdbdbd; /* Gris moyen pour la bordure */
+    border-radius: 20px;
+    padding: 20px;
     text-decoration: none;
-    padding: 20px 30px;
-    border-radius: 10px;
-    font-size: 20px;
+    color: #000;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.youtuber-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.youtuber-card p {
+    margin: 0;
+    font-size: 18px;
     font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
 }
 
 .youtuber-card:hover {
-    background-color: #cc0000;
     transform: scale(1.05);
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.25);
 }
+
+/* Page de présentation avec le lien GitHub */
+.project-info {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 20px;
+    color: #4a4a4a; /* Gris foncé */
+}
+
+.project-info p {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+footer {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #333;
+}
+
