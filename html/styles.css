@@ -1,33 +1,35 @@
-/* styles.css */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+    font-family: 'Arial', sans-serif;
     background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background-color: #FF0000;
-    color: white;
-    padding: 15px;
+    text-align: center;
+    padding: 20px;
 }
 
 h1 {
-    margin: 0;
+    color: #222;
+    margin-bottom: 40px;
 }
 
-.container {
-    margin-top: 20px;
+.youtuber-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 
-.video-container {
-    margin-top: 30px;
+.youtuber-card {
+    display: inline-block;
+    background-color: #ff0000;
+    color: white;
+    text-decoration: none;
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-iframe {
-    width: 80%;
-    height: 450px;
-    border: none;
+.youtuber-card:hover {
+    background-color: #cc0000;
+    transform: scale(1.05);
 }
-
