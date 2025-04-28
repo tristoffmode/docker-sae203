@@ -148,24 +148,27 @@ N’oubliez pas de stopper le conteneur une fois l’exercice terminé avec la c
 docker stop httpd-<votre nom>
 
 
+## Conclusion
+Vous avez appris les concepts de base de Docker, comment manipuler des conteneurs et des images, et comment interagir avec eux en utilisant différentes commandes. Vous avez également vu comment exposer des ports et partager des fichiers entre votre machine et les conteneurs Docker.
+
 # TP2 Dockerfile pour la création d’images
 
 ## Introduction
-Jusqu’à présent, nous avons appris à utiliser les images disponibles sur hub.docker.com pour lancer des conteneurs dans notre environnement. Cependant, une question se pose : y a-t-il une image pour chaque type de service que l’on peut imaginer ? La réponse est claire : non.
+Jusqu’à présent, nous avons appris à utiliser les images disponibles sur [hub.docker.com](https://hub.docker.com) pour lancer des conteneurs dans notre environnement. Cependant, une question se pose : y a-t-il une image pour chaque type de service que l’on peut imaginer ? La réponse est claire : non.
 
-À partir d’une image existante, le fichier `Dockerfile` nous permet, entre autres, d’installer de nouveaux packages, de configurer la visibilité des ports et de définir le programme en cours d’exécution par défaut. En d’autres termes, Dockerfile nous permet de générer n’importe quel type d’image avec les caractéristiques que nous voulons.
+À partir d’une image existante, le fichier `Dockerfile` nous permet, entre autres, d’installer de nouveaux packages, de configurer la visibilité des ports et de définir le programme en cours d’exécution par défaut. En d’autres termes, `Dockerfile` nous permet de générer n’importe quel type d’image avec les caractéristiques que nous voulons.
 
 ## 1. Introduction à Dockerfile
 
-Les paramètres et les instructions d’un Dockerfile sont nombreux, nous n’allons donc pas tous les voir. Au lieu de cela, nous allons travailler avec des exercices avec un ordre croissant de complexité qui nous permettront de découvrir progressivement comment créer notre propre Dockerfile. Si nous avons besoin de connaître de nouvelles fonctionnalités ou la syntaxe d’une instruction spécifique, vous pouvez consulter ce manuel de référence de Dockerfile.
+Les paramètres et les instructions d’un `Dockerfile` sont nombreux, nous n’allons donc pas tous les voir. Au lieu de cela, nous allons travailler avec des exercices avec un ordre croissant de complexité qui nous permettront de découvrir progressivement comment créer notre propre `Dockerfile`. Si nous avons besoin de connaître de nouvelles fonctionnalités ou la syntaxe d’une instruction spécifique, vous pouvez consulter ce manuel de référence de Dockerfile.
 
 ### 1.1. Notre premier Dockerfile
 
-Pour construire une image, un fichier Dockerfile est créé avec les instructions qui précisent ce qui va aller dans l’environnement, à l’intérieur du conteneur (réseaux, volumes, ports vers l’extérieur, fichiers qui sont inclus). Un fichier Dockerfile indique comment et avec quoi construire l’image.
+Pour construire une image, un fichier `Dockerfile` est créé avec les instructions qui précisent ce qui va aller dans l’environnement, à l’intérieur du conteneur (réseaux, volumes, ports vers l’extérieur, fichiers qui sont inclus). Un fichier `Dockerfile` indique comment et avec quoi construire l’image.
 
-Voyons un exemple simple de fichier Dockerfile :
+Voyons un exemple simple de fichier `Dockerfile` :
 
-# dockerfile #
+```dockerfile
 # Utiliser l'image httpd officielle comme image parent
 FROM httpd
 
@@ -195,21 +198,21 @@ cd premierDockerfile
 
 Dans le répertoire actuel, créez un fichier appelé Dockerfile et copiez le code du Dockerfile ci-dessus.
 
-Si nous voyons le code du Dockerfile, il y a une ligne dans laquelle nous indiquons que nous voulons copier le répertoire html de l’hôte dans le répertoire /usr/local/apache2/htdocs/ du conteneur. Nous devons donc maintenant créer ce répertoire html :
+Si nous voyons le code du Dockerfile, il y a une ligne dans laquelle nous indiquons que nous voulons copier le répertoire html de l’hôte dans le répertoire /usr/local/apache2/htdocs/ du conteneur. Nous devons donc maintenant créer ce répertoire html. Tapez :
 
-mkdir html
+    mkdir html
 
-Dans le répertoire html, créez un fichier index.html avec le contenu HTML de votre choix.
+    Dans le répertoire html, créez un fichier index.html avec le contenu HTML de votre choix.
 
 Revenons au répertoire premierDockerfile pour que la commande tree affiche cette arborescence :
 
-    $ tree
-    .
-    ├── Dockerfile
-    └── html
-        └── index.html
+$ tree
+.
+├── Dockerfile
+└── html
+    └── index.html
 
-Félicitations!! Nous avons terminé la structure de répertoires.
+Félicitations !! Nous avons terminé la structure de répertoires.
 1.1.2. Créer l’image et lancer le conteneur
 
 Pour construire l’image décrite dans le Dockerfile, nous utiliserons la commande suivante :
@@ -241,14 +244,63 @@ La sortie de docker ps doit être similaire à :
 CONTAINER ID   IMAGE          COMMAND              CREATED          STATUS          PORTS                                   NAMES
 b8f8f406b03c   httpd-juanlu   "httpd-foreground"   30 minutes ago   Up 30 minutes   0.0.0.0:8080->80/tcp, :::8080->80/tcp   quirky_tesla
 
-Finalement, arrêtez le conteneur avec la commande suivante (les derniers chiffres sont le code de hachage affiché par docker ps) :
+Finalement, arrêtez le conteneur avec la commande suivante (les dernières chiffres sont le code de hachage affiché par docker ps) :
 
-docker stop b8f8f406b03
+docker stop b8f8f406b03c
 
+Encore, si on souhaite supprimer le conteneur, on peut taper :
 
+docker rm b8f8f406b03c
 
+NOTE : Au lieu du code de hachage, on peut toujours taper le nom du conteneur. Dans le cas d’exemple ce nom est quirky_tesla.
 
+Félicitations !! Nous avons lancé notre premier conteneur avec notre image personnelle.
+1.2. Installer un service Apache à partir d’une image vierge Debian
 
-## Conclusion
-Vous avez appris les concepts de base de Docker, comment manipuler des contene
+L’exemple Dockerfile ci-dessus est très simple, puisque l’image httpd est préconfigurée pour lancer un service Apache. Cependant, pourrait-on configurer une image avec le service Apache à partir d’une image Debian sur laquelle Apache n’est pas installé ? La réponse est oui et nous apprendrons comment dans cette section.
 
+Voici le Dockerfile correspondant :
+
+# Utiliser l'image debian officielle comme image parent
+FROM debian:latest
+
+# Installer des services et des packages
+RUN apt-get update && \
+    apt-get -y install apache2
+
+# Copier les fichiers de l'hôte vers l'image
+COPY ./html /var/www/html
+
+# Exposer le port 80
+EXPOSE 80
+
+# Lancer le service apache au démarrage du conteneur
+CMD ["/usr/sbin/apache2ctl","-DFOREGROUND"]
+
+Lisez attentivement le Dockerfile et essayez de le comprendre. Pour voir ce que signifie chaque ligne, vous pouvez consulter ce manuel.
+
+En suivant les étapes décrites dans l'exemple précédent, créez une image à partir du nouveau fichier Dockerfile proposé et testez si tout fonctionne correctement.
+2. Dockerfile + GitHub
+
+Au début de ce tutoriel, nous avons mentionné que : “L’objectif de Docker est de développer, déployer et exécuter des applications dans un environnement isolé appelé conteneur”. Grâce à l’aide de GitHub, nous allons voir dans cette section à quel point il est simple de déployer un service basé sur Docker sur n’importe quelle machine ayant accès à Git et Docker. En fait, il suffit de sauvegarder la structure du répertoire avec le fichier Dockerfile que nous avons vu précédemment dans un dépôt GitHub.
+
+Reprenons l’exercice décrit dans la section 1.1. Notre premier Dockerfile et sauvegardons toute la structure du répertoire dans un référentiel GitHub.
+
+Vous pouvez trouver le résultat dans ce dépôt GitHub. Voici un exemple de serveur Apache prêt à être déployé.
+
+Pour voir la simplicité de déploiement d'un tel service avec l'aide de GitHub, accédez au référentiel et suivez les instructions pour le déployer sur votre machine.
+
+En principe, vous connaissez bien cet exercice précédent et cela ne semble pas être un mystère. Cependant, nous pouvons compliquer les choses autant que nous le voulons. Imaginons qu’au lieu d’un simple service Apache, nous voulions avoir un serveur Apache + MariaDB + PHP (MariaDB est une version open-source de MySQL). Eh bien, avec cette façon de travailler, nous pouvons déployer ce service sur n’importe quelle machine en quelques secondes : vous vous rendez compte de la puissance de cette technologie ?
+
+En suivant les instructions de ce dépôt GitHub, déployez un serveur LAMP (Apache + MariaDB + PHP) sur votre machine.
+
+Ne restez pas là. Étudiez bien la structure des répertoires et le contenu des différentes instructions du Dockerfile et des autres fichiers.
+3. Un point sur Docker Compose
+
+Ce cours se termine ici, mais il vaut la peine de faire un point rapide sur d'autres outils Docker dans le cas où vous souhaitez continuer vos recherches au-delà du Dockerfile.
+
+Il existe des services, tels que Apache + MariaDB + PHP que nous avons vus, qui ne sont en fait pas un mais plusieurs services. Dans ces cas, normalement, nous n’allons pas les gérer avec un seul conteneur mais avec plusieurs conteneurs qui interagissent les uns avec les autres. On parle de services multi-conteneurs. Dans ce cas, Docker Compose est un outil permettant de définir et d’exécuter des applications Docker multi-conteneurs.
+
+Nous n’allons pas entrer dans le détail du fonctionnement de Docker Compose, mais ici vous pouvez accéder à un serveur LAMP géré dans deux conteneurs avec Docker Compose. Vous pouvez suivre les instructions pour le déployer sur votre machine.
+
+Attention !! : Docker Compose n’est pas disponible sur les machines de l’IUT.
